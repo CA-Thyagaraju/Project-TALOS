@@ -8,17 +8,13 @@ import os
 def generate_launch_description():
 
     pkg_share = get_package_share_directory("talos_gazebo")
-
-    world = os.path.join(
-        pkg_share,
-        "worlds",
-        "empty.sdf"
-    )
+    world = "/usr/share/gz/gz-sim8/worlds/empty.sdf"
 
     gazebo = ExecuteProcess(
         cmd=[
             "gz",
             "sim",
+            "-r",
             world
         ],
         output="screen"
@@ -49,14 +45,52 @@ def generate_launch_description():
                     "/robot_description",
                     "-name",
                     "talos",
+                    "-z",
+                    "0.3",
                 ],
                 output="screen",
             )
         ],
     )
 
+    load_controllers = TimerAction(
+    period=4.0,
+    actions=[
+        Node(
+            package="controller_manager",
+            executable="spawner",
+            arguments=["joint_state_broadcaster"],
+            output="screen",
+        ),
+        Node(
+            package="controller_manager",
+            executable="spawner",
+            arguments=["arm_controller"],
+            output="screen",
+        ),
+        Node(
+            package="controller_manager",
+            executable="spawner",
+            arguments=["gripper_controller"],
+            output="screen",
+        ),
+    ],
+)
+
+
+    clock_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=[
+            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock"
+        ],
+        output="screen",
+    )
+
     return LaunchDescription([
         gazebo,
         rsp,
-        spawn_robot
+        clock_bridge,
+        spawn_robot,
+        load_controllers,
     ])

@@ -18,5 +18,13 @@
       filename="gz-sim-sensors-system"
       name="gz::sim::systems::Sensors"/>
 
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
   </world>
 </sdf>
