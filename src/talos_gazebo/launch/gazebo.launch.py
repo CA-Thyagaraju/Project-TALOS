@@ -34,6 +34,16 @@ def generate_launch_description():
         )
     )
 
+    moveit = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                moveit_pkg,
+                "launch",
+                "moveit_sim.launch.py",
+            )
+        )
+    )
+
     spawn_robot = TimerAction(
         period=2.0,
         actions=[
@@ -93,4 +103,5 @@ def generate_launch_description():
         clock_bridge,
         spawn_robot,
         load_controllers,
+        moveit,
     ])
