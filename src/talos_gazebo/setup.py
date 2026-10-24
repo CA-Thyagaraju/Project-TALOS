@@ -25,6 +25,10 @@ setup(
             os.path.join('share', package_name, 'worlds'),
             glob('worlds/*')
         ),
+        (
+            os.path.join('share', package_name, 'models', 'overhead_camera'),
+            glob('models/overhead_camera/*')
+        ),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
